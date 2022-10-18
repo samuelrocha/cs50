@@ -1,0 +1,1 @@
+SELECT TRUNC(AVG(rating) * 100) / 100 FROM ratings;
