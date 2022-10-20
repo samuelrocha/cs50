@@ -1,44 +1,94 @@
--- Keep a log of any SQL queries you execute as you solve the mystery.
+-- DESCRIÇÃO DO CASO
 
-SELECT description FROM crime_scene_reports WHERE year = 2020 AND
-day = 28 AND month = 7 AND street = 'Chamberlin Street';
+SELECT description FROM crime_scene_reports WHERE day=28 and month=7 and year=2020
+and street='Chamberlin Street';
 
-Theft of the CS50 duck took place at 10:15am at the Chamberlin Street
-courthouse. Interviews were conducted today with three witnesses who were 
-present at the time — each of their interview transcripts mentions the 
-courthouse.
+-- TESTEMUNHAS DO ATO
 
-SELECT name, transcript FROM interviews 
-WHERE transcript LIKE "%courthouse%";
+SELECT name, transcript FROM interviews WHERE day=28 and month=7 and
+year=2020;
 
-Ruth
-Eugene
-Raymond
+-- CARROS QUE SAIRAM DO ESTACIONAMENTO ENTRE 10:15 E 10:25
 
-SELECT license_plate FROM courthouse_security_logs 
-WHERE year = 2020 AND day = 28 AND month = 7 AND hour = 10 AND minute >= 15
-AND minute <= 25 AND activity = 'exit';
+SELECT license_plate FROM courthouse_security_logs WHERE day=28 and
+month=7 and year=2020 and hour=10 and minute<=25 and minute >=15
+and activity='exit';
 
-5P2BI95
-94KL13X
-6P58WS2
-4328GD8
-G412CB7
-L93JTIZ
-322W7JE
-0NTHK55
+-- QUEM SACOU DINHEIRO
 
-SELECT DISTINCT(name) FROM people JOIN courthouse_security_logs 
-ON people.license_plate = courthouse_security_logs.license_plate 
-WHERE people.license_plate IN (SELECT license_plate FROM courthouse_security_logs 
-WHERE year = 2020 AND day = 28 AND month = 7 AND hour = 10 AND minute >= 15
-AND minute <= 25 AND activity = 'exit');
+SELECT name FROM bank_accounts JOIN atm_transactions ON
+bank_accounts.account_number = atm_transactions.account_number
+JOIN people ON person_id = people.id
+WHERE day=28 and month=7 and year=2020 and 
+atm_location='Fifer Street';
 
-Patrick
-Amber
-Elizabeth
-Roger
-Danielle
-Russell
-Evelyn
-Ernest
+-- NOME DAS PESSOAS QUE SAIRAM DO ESTACIONAMENTO
+
+SELECT name FROM courthouse_security_logs JOIN
+people ON courthouse_security_logs.license_plate = people.license_plate
+WHERE day=28 and
+month=7 and year=2020 and hour=10 and minute<=25 and minute >=15
+and activity='exit';
+
+-- SUSPEITOS QUE ESTIVERAM EM AMBOS LUGARES
+
+SELECT name FROM bank_accounts JOIN atm_transactions ON
+bank_accounts.account_number = atm_transactions.account_number
+JOIN people ON person_id = people.id
+WHERE day=28 and month=7 and year=2020 and 
+atm_location='Fifer Street' and name IN (
+SELECT name FROM courthouse_security_logs JOIN
+people ON courthouse_security_logs.license_plate = people.license_plate
+WHERE day=28 and
+month=7 and year=2020 and hour=10 and minute<=25 and minute >=15
+and activity='exit'
+);
+
+-- SUSPEITOS QUE FIZERAM LIGAÇÃO
+
+SELECT name, caller, receiver FROM bank_accounts JOIN atm_transactions ON
+bank_accounts.account_number = atm_transactions.account_number
+JOIN people ON person_id = people.id JOIN phone_calls ON
+people.phone_number = phone_calls.caller
+WHERE atm_transactions.day=28 and atm_transactions.month=7 and 
+atm_transactions.year=2020 and 
+atm_location='Fifer Street' and name IN (
+SELECT name FROM courthouse_security_logs JOIN
+people ON courthouse_security_logs.license_plate = people.license_plate
+WHERE day=28 and
+month=7 and year=2020 and hour=10 and minute<=25 and minute >=15
+and activity='exit'
+) and phone_calls.day=28 and phone_calls.month=7 and phone_calls.year=2020
+and duration <= 60;         
+
+-- NOME DE QUEM A RECEBEU LIGAÇÃO
+
+SELECT name, phone_number FROM people WHERE phone_number IN
+(SELECT receiver FROM bank_accounts JOIN atm_transactions ON
+bank_accounts.account_number = atm_transactions.account_number
+JOIN people ON person_id = people.id JOIN phone_calls ON
+people.phone_number = phone_calls.caller
+WHERE atm_transactions.day=28 and atm_transactions.month=7 and 
+atm_transactions.year=2020 and 
+atm_location='Fifer Street' and name IN (
+SELECT name FROM courthouse_security_logs JOIN
+people ON courthouse_security_logs.license_plate = people.license_plate
+WHERE day=28 and
+month=7 and year=2020 and hour=10 and minute<=25 and minute >=15
+and activity='exit'
+) and phone_calls.day=28 and phone_calls.month=7 and phone_calls.year=2020
+and duration <= 60);
+
+-- ID DO AEROPORTO
+
+SELECT * FROM airports WHERE city='Fiftyville';
+
+-- RETORNA TODOS VOOS DO DIA 29 EM ORDEM
+
+SELECT id FROM flights WHERE origin_airport_id=8 and day=29 and month=7 
+and year=2020 ORDER BY year, month, day, hour, minute;
+
+-- PASSAGEIROS NO PRIMEIRO VOO DO DIA 29 DE JULHO
+
+SELECT name FROM people JOIN passengers ON people.passport_number = passengers.passport_number
+WHERE flight_id=36;

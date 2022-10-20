@@ -1,0 +1,23 @@
+"O roubo do pato CS50 ocorreu às 10h15 no tribunal de Chamberlin 
+Street. As entrevistas foram realizadas hoje com três testemunhas 
+que estavam presentes no momento - cada uma de suas transcrições 
+de entrevista menciona o tribunal."
+
+--------------------------------------------------------------------
+Ruth - Em algum momento dentro de dez minutos do roubo, eu vi o ladrão
+entrar em um carro no estacionamento do tribunal e ir embora. Se você
+tiver imagens de segurança do estacionamento do tribunal, talvez 
+queira procurar carros que deixaram o estacionamento nesse período.
+
+Eugene - Não sei o nome do ladrão, mas era alguém que reconheci. No 
+início desta manhã, antes de chegar ao tribunal, eu estava passando 
+pelo caixa eletrônico na Fifer Street e vi o ladrão lá sacando algum 
+dinheiro.
+
+Raymond - Quando o ladrão estava saindo do tribunal, eles chamaram 
+alguém que falou com eles por menos de um minuto. Na ligação, ouvi o 
+ladrão dizer que eles planejavam pegar o primeiro voo de Fiftyville 
+amanhã. O ladrão então pediu à pessoa do outro lado do telefone para 
+comprar a passagem aérea.
+
+---------------------------------------------------------------------
