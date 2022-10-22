@@ -92,3 +92,8 @@ and year=2020 ORDER BY year, month, day, hour, minute;
 
 SELECT name FROM people JOIN passengers ON people.passport_number = passengers.passport_number
 WHERE flight_id=36;
+
+-- CIDADE NA QUAL O LADRÃO FUGIU
+
+SELECT city FROM airports JOIN flights ON destination_airport_id = airports.id
+WHERE flights.id =36;
