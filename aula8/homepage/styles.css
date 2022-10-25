@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+
+body{
+    background-color: white;
+}
+
+.main{
+    background-color: #1b191a;
+    color: white;
+    margin: 0;
+    max-width: 100%;
+}
+
+ul{
+    list-style: none;
+    align-items: center;
+}
+
+img{
+    width: auto;
+    height: 400px;
+}
+
+.title{
+    font-family: 'Rubik Glitch', cursive;
+    color: #1afe49;
+    font-size: 2em;
+}
+
+.select{
+    background-color: #083e12;
+}
+
+li{
+    padding: 3px;
+}
