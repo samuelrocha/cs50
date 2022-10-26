@@ -1,0 +1,8 @@
+<div class="row justify-content-md-center">
+    <form class="d-flex col-8 formulario" style="display: flex;" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn copiado pesquisa" type="submit">
+            <i class="bi bi-search"></i><span class="pesquisa-texto">Search</span>
+        </button>
+    </form>
+</div>
