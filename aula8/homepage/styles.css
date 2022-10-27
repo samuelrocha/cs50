@@ -25,6 +25,15 @@
     text-align: center;
 }
 
+.mobile-menu{
+    background-color: #14171a;
+    line-height: 150px;
+}
+
+.remove-padding{
+    padding: 0;
+}
+
 .dark-mode {
     text-align: center;
     margin-right: 0;
@@ -49,7 +58,7 @@
 /* CARROSEL */
 .img-carrosel {
     width: auto;
-    height: 400px;
+    height: 500px;
 }
 
 .carrosel {
@@ -70,6 +79,17 @@ h1 {
 
 
 /* LISTA DE JOGOS */
+.games {
+    display: block;
+}
+
+.games .card {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+
 .card {
     padding: 0;
     margin: 10px;
@@ -116,6 +136,23 @@ h3 {
     width: 100%;
 }
 
+.dark-mode label,
+.sumiu {
+    display: none;
+}
+
+.podcast h3 {
+    font-size: 5em;
+}
+
+.podcast p {
+    font-size: 1.2em;
+}
+
+.alinhamento {
+    text-align: center;
+}
+
 /* RODAPE */
 .footer {
     background-color: #041348;
@@ -129,36 +166,33 @@ h3 {
     margin-bottom: 0;
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (min-width: 720px){
+    .mobile-menu{
+        line-height: 100px;
+    }
+}   
+
+@media screen and (min-width: 1080px) {
     
     .img-carrosel{
-        height: 600px;
+        height: 400px;
     }
 
     .games {
-        display: block;
+        margin: 0;
+        display: flex;
     }
 
     .games .card {
-        width: 70%;
-        margin: auto;
-        margin-bottom: 20px;
+        width: 100%;
     }
 
     .dark-mode label,
     .sumiu {
+        display: flex;
+    }
+
+    .sumiu-reverso{
         display: none;
-    }
-
-    .podcast h3 {
-        font-size: 5em;
-    }
-
-    .podcast p {
-        font-size: 1.2em;
-    }
-
-    .alinhamento {
-        text-align: center;
     }
 }
