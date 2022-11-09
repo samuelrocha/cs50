@@ -15,33 +15,14 @@
 }
 
 /* BARRA DE MENU */
+
+.font-white {
+    color: white;
+}
+
 .menu {
     background-color: #14171a;
-    color: white;
-    margin: 0;
-    max-width: 100%;
-    list-style: none;
-    align-items: center;
-    text-align: center;
-}
-
-.mobile-menu{
-    background-color: #14171a;
-    line-height: 150px;
-}
-
-.remove-padding{
-    padding: 0;
-}
-
-.dark-mode {
-    text-align: center;
-    margin-right: 0;
-}
-
-.form-switch.form-check-reverse .form-check-input {
-    margin-right: -1.5em;
-}
+} 
 
 .select {
     background-color: #083e12;
@@ -53,6 +34,14 @@
     color: #1afe49;
     font-size: 2em;
     text-align: left;
+}
+
+.title:hover {
+    color: #1afe49;
+}
+
+.title:visited {
+    color: #1afe49;
 }
 
 /* CARROSEL */
@@ -79,6 +68,10 @@ h1 {
 
 
 /* LISTA DE JOGOS */
+a{
+    text-decoration: none;
+}
+
 .games {
     display: block;
 }
@@ -166,11 +159,6 @@ h3 {
     margin-bottom: 0;
 }
 
-@media screen and (min-width: 720px){
-    .mobile-menu{
-        line-height: 100px;
-    }
-}   
 
 @media screen and (min-width: 1080px) {
     
@@ -187,12 +175,7 @@ h3 {
         width: 100%;
     }
 
-    .dark-mode label,
     .sumiu {
         display: flex;
-    }
-
-    .sumiu-reverso{
-        display: none;
     }
 }
