@@ -10,6 +10,24 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.row{
+    margin: 0;
+}
+
+.justify{
+    text-align: justify;
+}
+
+.tam-pdf{
+    height: 85vh;
+    margin: 10px 0px;
+}
+
+.tam-form{
+    height: 60vh;
+    margin: 10px 0px;
+}
+
 .max {
     max-width: 100%;
 }
@@ -76,7 +94,7 @@ a{
     display: block;
 }
 
-.games .card {
+.games .card{
     width: 70%;
     margin: auto;
     margin-bottom: 20px;
@@ -158,6 +176,16 @@ h3 {
 .footer-text {
     margin-bottom: 0;
 }
+
+/* ABOUT PAGE */
+
+.text-about{
+    margin: auto;
+    width: 95%;
+}
+
+
+
 
 
 @media screen and (min-width: 1080px) {
