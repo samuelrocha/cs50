@@ -3,10 +3,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 /* TODO ARQUIVO */
+body{
+    background-color: white;
+}
+
 .main {
     margin: 0;
     padding: 0;
-    background-color: white;
     font-family: 'Roboto', sans-serif;
 }
 
