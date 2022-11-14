@@ -6,6 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
 from helpers import apology, login_required, lookup, usd
 
@@ -53,7 +54,31 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
-    return apology("TODO")
+
+    if request.method == "POST":
+        share = lookup(request.form.get("symbol"))
+        amount = request.form.get("shares")
+
+        if not share:
+            return apology("share not found")
+        if not amount:
+            return apology("unreported amount")
+
+        total_payable = float(share['price']) * int(amount)
+        row = db.execute("SELECT cash FROM users WHERE id = ?",
+                         session["user_id"])
+
+        if row[0]["cash"] < total_payable:
+            return apology("poor you have no money")
+
+        balance = row[0]["cash"] - total_payable
+        transacted = datetime.now()
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", balance, session["user_id"])
+
+        db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)", share["symbol"], amount, share["price"], transacted, session["user_id"])
+        return redirect("/")
+
+    return render_template("buy.html")
 
 
 @app.route("/history")
@@ -157,9 +182,10 @@ def register():
         row = db.execute("SELECT id FROM users WHERE username = ?", username)
 
         if len(row) == 1:
-            return render_template("register.html", username_already_exists = 1)
+            return render_template("register.html", username_already_exists=1)
 
-        id = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, generate_password_hash(password))
+        id = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
+                        username, generate_password_hash(password))
         session["user_id"] = id
 
         return redirect("/")
