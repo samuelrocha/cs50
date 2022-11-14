@@ -115,7 +115,16 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+
+    if request.method == "POST":
+        share = lookup(request.form.get("symbol"))
+        if share:
+            phrase = f"A share of {share['name']} ({share['symbol']}) costs ${share['price']:.2f}."
+        else:
+            return apology("share not found")
+        return render_template("quote.html", phrase=phrase)
+
+    return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])

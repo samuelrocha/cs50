@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Quoto
+{% endblock %}
+
+{% block main %}
+
+{%if not phrase %}
+<form action="/quote" method="post">
+    <div class="form-group">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <input class="form-control" name="symbol" placeholder="Symbol" type="txt">
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-6 text-center">
+            <button class="btn btn-primary" type="submit">Quote</button>
+        </div>
+    </div>
+</form>
+{% else %}
+<div class="row justify-content-center">
+    <p>{{phrase}}</p>
+</div>
+{% endif %}
+</div>
+{% endblock %}
