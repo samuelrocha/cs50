@@ -46,7 +46,7 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+    return render_template("index.html")
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -128,18 +128,32 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
+        username = request.form.get("username")
+        password = request.form.get("password")
+        retype_password = request.form.get("retype_password")
+
         # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
+        if not username:
+            return render_template("register.html", no_username=1)
 
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
+        if not password:
+            return render_template("register.html", no_password=1, username=username)
 
-        # Ensure password was submitted
-        elif not request.form.get("retype_password"):
-            return apology("must provide retype password", 403)
+        if not retype_password:
+            return render_template("register.html", no_retype_password=1, username=username)
 
+        if password != retype_password:
+            return render_template("register.html", different_password=1, username=username)
+
+        row = db.execute("SELECT id FROM users WHERE username = ?", username)
+
+        if len(row) == 1:
+            return render_template("register.html", username_already_exists = 1)
+
+        id = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, generate_password_hash(password))
+        session["user_id"] = id
+
+        return redirect("/")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
