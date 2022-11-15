@@ -88,7 +88,7 @@ def buy():
 
         if not share:
             return apology("share not found")
-        if not amount:
+        if not amount or not amount.isdigit():
             return apology("unreported amount")
 
         total_payable = float(share['price']) * int(amount)
@@ -197,25 +197,19 @@ def register():
 
         username = request.form.get("username")
         password = request.form.get("password")
-        retype_password = request.form.get("retype_password")
+        retype_password = request.form.get("confirmation")
 
         # Ensure username was submitted
-        if not username:
-            return render_template("register.html", no_username=1)
-
-        if not password:
-            return render_template("register.html", no_password=1, username=username)
-
-        if not retype_password:
-            return render_template("register.html", no_retype_password=1, username=username)
+        if not retype_password or not password or not username:
+            return apology("fill in all fields")
 
         if password != retype_password:
-            return render_template("register.html", different_password=1, username=username)
+            return apology("different passwords")
 
         row = db.execute("SELECT id FROM users WHERE username = ?", username)
 
         if len(row) == 1:
-            return render_template("register.html", username_already_exists=1)
+            return apology("The user already exists")
 
         id = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
                         username, generate_password_hash(password))

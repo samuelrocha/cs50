@@ -7,46 +7,15 @@ Register
 {% block main %}
 <form action="/register" method="post">
     <div class="form-group">
-        {% if username %}
-        <input autocomplete="off" class="form-control" name="username" placeholder="Username" type="text"
-            value="{{username}}">
-        {% else %}
-        <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
-        {% endif %}
+        <input autocomplete="off" autofocus class="form-control" required name="username" placeholder="Username"
+            type="text">
     </div>
-    {% if no_username %}
-    <div class="alert alert-danger" role="alert">
-        must provide username!
-    </div>
-    {% elif username_already_exists %}
-    <div class="alert alert-danger" role="alert">
-        username already exists!
-    </div>
-    {% endif %}
     <div class="form-group">
-        {% if username %}
-        <input class="form-control" autofocus name="password" placeholder="Password" type="password">
-        {% else %}
-        <input class="form-control" name="password" placeholder="Password" type="password">
-        {% endif %}
+        <input class="form-control" name="password" required placeholder="Password" type="password">
     </div>
-    {% if no_password %}
-    <div class="alert alert-danger" role="alert">
-        must provide password!
-    </div>
-    {% endif %}
     <div class="form-group">
-        <input class="form-control" name="retype_password" placeholder="Retype Password" type="password">
+        <input class="form-control" name="confirmation" required placeholder="Retype Password" type="password">
     </div>
-    {% if no_retype_password %}
-    <div class="alert alert-danger" role="alert">
-        must provide retype password!
-    </div>
-    {% elif different_password %}
-    <div class="alert alert-danger" role="alert">
-        different passwords!
-    </div>
-    {% endif %}
     <button class="btn btn-primary" type="submit">Register</button>
 </form>
 
