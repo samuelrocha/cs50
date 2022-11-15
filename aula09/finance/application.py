@@ -73,9 +73,11 @@ def buy():
 
         balance = row[0]["cash"] - total_payable
         transacted = datetime.now()
-        db.execute("UPDATE users SET cash = ? WHERE id = ?", balance, session["user_id"])
+        db.execute("UPDATE users SET cash = ? WHERE id = ?",
+                   balance, session["user_id"])
 
-        db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)", share["symbol"], amount, share["price"], transacted, session["user_id"])
+        db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)",
+                   share["symbol"], amount, share["price"], transacted, session["user_id"])
         return redirect("/")
 
     return render_template("buy.html")
@@ -198,7 +200,43 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+
+    if request.method == "POST":
+        shares = request.form.get("shares")
+        symbol = request.form.get("symbol")
+
+        if not symbol:
+            return apology("inform the symbol")
+
+        if not shares:
+            return apology("inform the number of shares")
+
+        row = db.execute(
+            "SELECT symbol, sum(shares) FROM transactions WHERE symbol = ? AND user_id = ? GROUP BY symbol", symbol, session["user_id"])
+
+        shares = int(shares)
+        if shares > row[0]["sum(shares)"]:
+            return apology("insufficient quotas")
+
+        share = lookup(request.form.get("symbol"))
+        transacted = datetime.now()
+        
+
+        db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)",
+                   share["symbol"], (shares * -1), share["price"], transacted, session["user_id"])
+
+        row = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+        balance = row[0]["cash"] + (share["price"] * shares)
+
+        db.execute("UPDATE users SET cash = ? WHERE id = ?",
+                   balance, session["user_id"])
+
+        return redirect("/")
+
+    rows = db.execute(
+        "SELECT symbol FROM transactions WHERE user_id= ? GROUP BY symbol", session["user_id"])
+
+    return render_template("sell.html", shares=rows)
 
 
 def errorhandler(e):
