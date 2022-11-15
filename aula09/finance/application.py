@@ -47,7 +47,34 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return render_template("index.html")
+
+    rows = db.execute(
+        "SELECT symbol, sum(shares) FROM transactions WHERE user_id= ? GROUP BY symbol HAVING sum(shares) != 0", session["user_id"])
+
+    stocks = []
+    total = 0
+    for i, row in enumerate(rows):
+        stocks.append({})
+        share = lookup(row['symbol'])
+        stocks[i]['symbol'] = share['symbol']
+        stocks[i]['name'] = share['name']
+        stocks[i]['shares'] = row['sum(shares)']
+        stocks[i]['price'] = share['price']
+        stocks[i]['total'] = int(row['sum(shares)']) * float(share['price'])
+        total += stocks[i]['total']
+        stocks[i]['total'] = f'{stocks[i]["total"]:.2f}'
+
+    row = db.execute("SELECT cash from users WHERE id = ?", session["user_id"])
+    cash = float(row[0]['cash'])
+    total += cash
+    cash = f'{cash:.2f}'
+    total = f'{total:.2f}'
+
+    sold = request.args.get('sold')
+    bought = request.args.get('bought')
+    change = request.args.get('change')
+
+    return render_template("index.html", stocks=stocks, total=total, cash=cash, sold=sold, bought=bought, change=change)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -78,7 +105,7 @@ def buy():
 
         db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)",
                    share["symbol"], amount, share["price"], transacted, session["user_id"])
-        return redirect("/")
+        return redirect("/?bought=True")
 
     return render_template("buy.html")
 
@@ -87,7 +114,11 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+
+    rows = db.execute(
+        "SELECT symbol, shares, price, transacted FROM transactions WHERE user_id = ?", session["user_id"])
+
+    return render_template("history.html", stocks=rows)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -220,23 +251,52 @@ def sell():
 
         share = lookup(request.form.get("symbol"))
         transacted = datetime.now()
-        
 
         db.execute("INSERT INTO transactions (symbol, shares, price, transacted, user_id) VALUES (?, ?, ?, ?, ?)",
                    share["symbol"], (shares * -1), share["price"], transacted, session["user_id"])
 
-        row = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+        row = db.execute("SELECT cash FROM users WHERE id = ?",
+                         session["user_id"])
         balance = row[0]["cash"] + (share["price"] * shares)
 
         db.execute("UPDATE users SET cash = ? WHERE id = ?",
                    balance, session["user_id"])
 
-        return redirect("/")
+        return redirect("/?sold=True")
 
     rows = db.execute(
-        "SELECT symbol FROM transactions WHERE user_id= ? GROUP BY symbol", session["user_id"])
+        "SELECT symbol FROM transactions WHERE user_id= ? GROUP BY symbol HAVING sum(shares) != 0", session["user_id"])
 
     return render_template("sell.html", shares=rows)
+
+@app.route("/config", methods=["GET", "POST"])
+@login_required
+def config():
+
+    if request.method == "POST":
+        
+        current = request.form.get('password')
+        new = request.form.get('new_password')
+        new2 = request.form.get('new_password2')
+
+        if not current:
+            return apology("inform the current password")
+
+        if not new:
+            return apology("inform the new password")
+
+        if not new == new2:
+            return apology("different passwords")
+
+        rows = db.execute('SELECT hash FROM users WHERE id = ?', session['user_id'])
+        if not check_password_hash(rows[0]["hash"], current):
+            return apology("current password incorrect")
+
+        new = generate_password_hash(new)
+        db.execute("UPDATE users SET hash = ? WHERE id = ?", new, session['user_id'])
+        return redirect('/?change=True')
+
+    return render_template('config.html')
 
 
 def errorhandler(e):
